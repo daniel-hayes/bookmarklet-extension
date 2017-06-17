@@ -1,6 +1,5 @@
 <!doctype html>
 <style type="text/css">
-
   button {
     width: 150px;
     border: 1px solid #e6e6e6;
@@ -17,7 +16,12 @@
   button:active {
     background: #dcdcdc;
   }
-
 </style>
 <script src="popup.js"></script>
-<div id="popup"></div>
+
+<div id="popup">
+  <input id="filter" placeholder="Search" />
+  <div id="bookmarklets">
+    <p>Loading...</p>
+  </div>
+</div>
