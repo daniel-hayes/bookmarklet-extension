@@ -42,8 +42,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-console.log(_bookmarklets2.default, 'the tset');
-
 var Extension = function () {
   function Extension() {
     _classCallCheck(this, Extension);
@@ -108,8 +106,6 @@ var Extension = function () {
           });
         }
 
-        console.log(storedItems.favorites, 'here');
-
         chrome.storage.sync.set({
           favorites: storedItems.favorites
         });
@@ -137,6 +133,7 @@ var Extension = function () {
       var favorites = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
 
       var bookmarkletData = _bookmarklets2.default[bookmarklet];
+
       return '\n    <div class="bookmarklet">\n      <button class="bookmarklet-button" data-source="' + bookmarklet + '">\n        ' + bookmarkletData.title + '\n      </button>\n      <div class="icons">\n        <div class="info" data-description="' + bookmarkletData.description + '">\n          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ddd" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">\n              <circle cx="12" cy="12" r="10"/>\n              <line x1="12" y1="16" x2="12" y2="12"/>\n              <line x1="12" y1="8" x2="12" y2="8"/>\n          </svg>\n        </div>\n        <label class="favorite-label">\n          <input type="checkbox" class="favorite" name="' + bookmarklet + '" value="Favorite" ' + (favorites.indexOf(bookmarklet) !== -1 ? 'checked' : '') + '>\n          <svg class="star" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">\n            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>\n          </svg>\n        </label>\n      </div>\n    </div>\n    ';
     }
   }, {
@@ -157,7 +154,6 @@ var Extension = function () {
     value: function init() {
       var _this3 = this;
 
-      // TODO is it better to load entire repos using config file, or set these in the options page? or both?
       document.addEventListener('DOMContentLoaded', function () {
         chrome.storage.sync.get({
           favorites: []
@@ -165,14 +161,17 @@ var Extension = function () {
           var favorites = storedItems.favorites;
 
 
-          console.log(favorites);
-
           _this3.bookmarkletContainer = document.getElementById('bookmarklets');
           // reset "Loading" screen
           _this3.bookmarkletContainer.innerHTML = '';
 
-          Object.keys(_bookmarklets2.default).forEach(function (bookmarklet) {
-            console.log(bookmarklet);
+          // sort by favorites then create panels
+          Object.keys(_bookmarklets2.default).sort(function (nameA, nameB) {
+            if (favorites.indexOf(nameA) !== -1) {
+              return -1;
+            }
+            return 1;
+          }).forEach(function (bookmarklet) {
             _this3.bookmarkletContainer.innerHTML += _this3.bookmarkletMarkup(bookmarklet, favorites);
           });
 

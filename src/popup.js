@@ -1,7 +1,5 @@
 import bookmarklets from './bookmarklets';
 
-console.log(bookmarklets, 'the tset');
-
 class Extension {
   constructor() {
     this.bookmarkletContainer;
@@ -54,8 +52,6 @@ class Extension {
         storedItems.favorites = storedItems.favorites.filter((favorite, index) => this.name !== favorite);
       }
 
-      console.log(storedItems.favorites, 'here');
-
       chrome.storage.sync.set({
         favorites: storedItems.favorites,
       });
@@ -78,6 +74,7 @@ class Extension {
 
   bookmarkletMarkup(bookmarklet, favorites = []) {
     const bookmarkletData = bookmarklets[bookmarklet];
+
    return `
     <div class="bookmarklet">
       <button class="bookmarklet-button" data-source="${bookmarklet}">
@@ -115,21 +112,23 @@ class Extension {
   }
 
   init() {
-    // TODO is it better to load entire repos using config file, or set these in the options page? or both?
     document.addEventListener('DOMContentLoaded', () => {
       chrome.storage.sync.get({
         favorites: []
       }, storedItems => {
         const { favorites } = storedItems;
 
-        console.log(favorites);
-
         this.bookmarkletContainer = document.getElementById('bookmarklets');
         // reset "Loading" screen
         this.bookmarkletContainer.innerHTML = '';
 
-        Object.keys(bookmarklets).forEach(bookmarklet => {
-          console.log(bookmarklet);
+        // sort by favorites then create panels
+        Object.keys(bookmarklets).sort((nameA, nameB) => {
+          if (favorites.indexOf(nameA) !== -1) {
+            return -1;
+          }
+          return 1;
+        }).forEach(bookmarklet => {
           this.bookmarkletContainer.innerHTML += this.bookmarkletMarkup(bookmarklet, favorites);
         });
 
