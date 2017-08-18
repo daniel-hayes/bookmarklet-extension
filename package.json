@@ -3,12 +3,8 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "directories": {
-    "test": "test"
-  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "browserify src/options.js -o extension/src/options/options.js -t [ babelify --presets [ es2015 ] ]"
+    "start": "watchify src/popup.js -o extension/src/browser_action/popup.js -t [ babelify --presets [ es2015 ] ]"
   },
   "repository": {
     "type": "git",
@@ -23,8 +19,6 @@
   "devDependencies": {
     "babel-preset-es2015": "^6.24.1",
     "babelify": "^7.3.0",
-    "brace": "^0.10.0",
-    "browserify": "^14.4.0",
     "watchify": "^3.9.0"
   }
 }
